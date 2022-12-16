@@ -1,19 +1,18 @@
 export interface IUser{
-  name: string
-  email: string
-  password: string
-  avatar: string
-  date: Date
+  userNo: number
+  userId: string
+  userPassword: string
+  userProfileImage: string
+  userSignupDate: Date
 }
 
 export interface IUserInputDTO {
-  name: string
-  email: string
-  password: string
-  avatar?: string
-  date?: Date
+  userId: string
+  userPassword: string
+  userProfileImage?: string
+  userSignupDate?: Date
 }
 
 export interface userUniqueSearchInput {
-  email : string
+  userId : string
 }

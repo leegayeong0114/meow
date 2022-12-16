@@ -7,7 +7,8 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { 
   IUser, 
-  IUserInputDTO 
+  IUserInputDTO, 
+  userUniqueSearchInput
 } from '../interfaces/IUser'
 import { UserService } from '../service'
 import { 
@@ -16,7 +17,7 @@ import {
 } from '../config/jwt'
 import { 
   USER_ALREADY_EXISIST, 
-  USER_EMAIL_NOTFOUND,
+  USER_ID_NOTFOUND,
   USER_PASSWORD_NOTMATCHED
 } from '../config/message'
 
@@ -26,10 +27,10 @@ const signUp = async (
   next: NextFunction
 ) => {
   try {
-    const { name, email, password }: IUserInputDTO = req.body
+    const { userId, userPassword }: IUserInputDTO = req.body
 
     // 기존 사용자인지 확인
-    const foundUser = await UserService.findUserById({ email })
+    const foundUser = await UserService.findUserById({ userId })
     if(foundUser) {
       return res.json({
         success: false,
@@ -39,20 +40,21 @@ const signUp = async (
 
     // 비밀번호 암호화
     const salt = await bcrypt.genSalt(JWT_SALT)
-    const hashedPassword = await bcrypt.hash(password, salt)
+    const hashedPassword = await bcrypt.hash(userPassword, salt)
 
-    const createdUser = await UserService.saveUser({ name, email, password: hashedPassword })
+    const createdUser = await UserService.saveUser({ userId, userPassword: hashedPassword })
 
     const payload = {
       user: {
-        email: createdUser.email,
+        userId: createdUser.userId,
       },
     }
 
+    // jwt.sign(payload, secretKey, option)
     jwt.sign(
       payload,
       JWT_SECRET_CODE,
-      { expiresIn: 36000 },
+      { expiresIn: '1d' },
       (err, token) => {
         if(err) throw err
         res.json({
@@ -72,19 +74,17 @@ const logIn = async (
   next: NextFunction
 ) => {
   try{
-    const { email, password } = req.body
-    const user = await UserService.findUserById({ email })
-
-    console.log(await UserService.findAllUser())
+    const { userId, userPassword } = req.body
+    const user = await UserService.findUserById({ userId })
 
     if(!user){
       return res.json({
         success: false,
-        errorMsg: USER_EMAIL_NOTFOUND
+        errorMsg: USER_ID_NOTFOUND
       })
     }
 
-    const isMatch = await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(userPassword, user.userPassword)
     if(!isMatch){
       return res.json({
         success: false,
@@ -94,16 +94,16 @@ const logIn = async (
 
     const payload = {
       user: {
-        email: user.email,
-        name: user.name
+        userNo: user.userNo,
+        userId: user.userId,
+        userProfileImage: user.userProfileImage,
       }
     }
 
-    console.log(user)
     jwt.sign(
       payload,
       JWT_SECRET_CODE,
-      { expiresIn: 36000 },
+      { expiresIn: '1d' },
       (err, token) => {
         if(err) throw err
         res.json({ 
@@ -112,6 +112,34 @@ const logIn = async (
         })
       }
     )
+  } catch(err) {
+    next(err)
+  }
+}
+
+const auth = async (
+  req: Request, 
+  res: Response, 
+  next: NextFunction
+) => {
+  try {
+
+    const loginInfo = req.body.loginInfo
+
+    if(loginInfo) {
+      const { userId }: userUniqueSearchInput = loginInfo.user
+      const authUser = await UserService.findUserById({ userId })
+      console.log(authUser)
+      return res.status(200).json(authUser)
+    }
+
+    const defaultUser = {
+      userNo: '',
+      userId: '',
+      userPassword: '',
+      userProfileImage: 'defalut',
+    }
+    return res.json(defaultUser)
   } catch(err) {
     next(err)
   }
@@ -130,8 +158,24 @@ const selectAllUser = async (
   }
 }
 
+const selectOneUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { userId } = req.body
+    const user: IUser = await UserService.findUserById({ userId })
+    return res.json({ user })
+  } catch(err) {
+    next(err)
+  }
+}
+
 export default {
   signUp,
   logIn,
+  auth,
   selectAllUser,
+  selectOneUser,
 }

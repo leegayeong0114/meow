@@ -1,15 +1,15 @@
-import 'bootstrap/dist/css/bootstrap.min.css'
 import React from 'react'
-import Header from './components/Header'
 import Router from './Router'
+import AuthContextProvider from './contexts/AuthContext'
 
-function App() {
-  
+import 'antd/dist/reset.css'
+
+
+const App: React.FC = () => {
   return (
-    <>
-      <Header />
+    <AuthContextProvider>
       <Router />
-    </>
+    </AuthContextProvider>
   )
 }
 

@@ -1,52 +1,82 @@
-import React, { FC } from 'react'
+import React, { FC, useContext } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { Button, Container, Form } from 'react-bootstrap'
-import axios from 'axios'
+import { api } from '../../utils/axiosInstance'
+import { useNavigate } from 'react-router-dom'
+import { Card, message, Space, Form, Input, Button } from 'antd'
+import { AuthContext } from '../../contexts/AuthContext'
+import { Link } from 'react-router-dom'
 
 interface FormValue {
-  email: string
-  password: string
+  userId: string
+  userPassword: string
 }
 
 const LoginPage: FC = () => {
 
-  const { 
-    register, 
-    handleSubmit, 
-    formState: { errors } 
-  } = useForm<FormValue>()
+  const navigate = useNavigate() // v6 이후 useHistory => useNavigate
+  const { authentication } = useContext(AuthContext);
 
-  const onSubmitHandler: SubmitHandler<FormValue> = async (data) => {
-    console.log(data)
-    const res = await axios.post('/api/users/login', data)
-    console.log(res.data)
+  const onSubmitHandler = async (data: FormValue) => {
+    console.log('[login] request data : ', data)
+    const payload = {
+      userId: data.userId,
+      userPassword: data.userPassword
+    }
+    
+    const res = await api().post('/api/users/login', payload)
+    console.log('[login] response data : ', data)
+    
     if(!res.data.success) alert(res.data.errorMsg)
+    else {
+      localStorage.setItem('accessToken', res.data.token)
+      message.info('로그인 성공')
+      navigate('/')
+      authentication()
+    }
   }
 
   return (
-    <Container fluid="md" style={{ height: '90vh' }}>
-      <Form onSubmit={ handleSubmit(onSubmitHandler) }>
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>EMAIL</Form.Label>
-          <Form.Control {...register('email', { required: true, maxLength: 20 })}/>
-          {
-            errors.email &&
-              <Form.Text className="text-muted">이메일을 입력해주세요.</Form.Text>
-          }
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>PASSWORD</Form.Label>
-          <Form.Control {...register('password', { required: true, minLength: 4 })} type="password" />
-          {
-            errors.password &&
-              <Form.Text className="text-muted">비밀번호를 입력해주세요.</Form.Text>
-          }
-        </Form.Group>
-        <Form.Group className="mb-3 mt-4">
-          <Button type="submit" variant="dark" size="lg" style={{ width: '100%' }}>로그인</Button>
-        </Form.Group>
-      </Form>
-    </Container>
+    <div style={{ padding: 24, textAlign: 'center', background: 'white', minHeight: '80vh' }}>
+      <Space direction="vertical" size="large" style={{ display: 'flex' }}>
+        <Card title="로그인" size="default" style={{ minHeight: '70vh' }}>
+          <Form
+            name="basic"
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 8 }}
+            initialValues={{ 
+              userId: '',
+              userPassword: ''
+            }}
+            onFinish={onSubmitHandler}
+            // onFinishFailed={onFinishFailed}
+            autoComplete="off"
+            style={{ marginTop: '5vh' }}
+          >
+            <Form.Item
+              label="아이디"
+              name="userId"
+              rules={[{ required: true, message: '아이디를 입력해주세요!' }]}
+            >
+              <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="비밀번호"
+              name="userPassword"
+              rules={[{ required: true, message: '비밀번호를 입력해주세요!' }]}
+            >
+              <Input.Password/>
+            </Form.Item>
+            <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+              <Button type="primary" htmlType="submit" block>
+                로그인
+              </Button>
+            </Form.Item>
+            <Link to={'/signup'}>아이디가 없으신가용?</Link>
+          </Form>
+        </Card>
+      </Space>
+    </div>
   )
 }
 

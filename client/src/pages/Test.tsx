@@ -2,43 +2,46 @@ import React, {
   useEffect, 
   useState 
 } from 'react'
-import axios from 'axios'
 import { IUser } from '../types'
-import UserInfoModal from '../components/Modal'
+import { api } from '../utils/axiosInstance'
+import { Empty, message } from 'antd'
 
-function Test() {
+const Test: React.FC = () => {
 
   const [userList, setUserList] = useState<IUser[]>([])
 
   useEffect(() => {
     getAllUser()
-  }, [userList])
+    onFinish()
+  }, [])
 
   const getAllUser = async () => {
     try {
-      const res = await axios.post('/api/users/select-all-user')
+      const res = await api().post('/api/users/select-all-user')
       setUserList(res.data.userList)
+      console.log(userList)
     } catch (error) {
       console.log(error)
     }
   }
 
-  const onClickUser = () => {
-    return (
-      <UserInfoModal />
-    )
+  const onFinish = () => {
+    message.success(`hi`)
   }
   
   return (
-    <>
-      <div className="app">
-        {
-          userList && userList.map((user: IUser, idx: number) => {
-            return <h5 key={idx} onClick={onClickUser}>{idx + 1}. {user.email} / {user.name} / {user.password}</h5>
+    <div style={{ padding: 24, textAlign: 'center', background: 'white' }}>
+      <p>long content</p>
+      {
+        userList && userList.length !== 0 
+        ?
+          userList.map((user: IUser, idx: number) => {
+            return <h5 key={idx}> {idx + 1}. {user.userNo} / {user.userId} / {user.userPassword}</h5>
           })
-        }
-      </div>
-    </>
+        :
+          <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      }
+    </div>
   )
 }
 

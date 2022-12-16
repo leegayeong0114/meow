@@ -15,8 +15,8 @@ const saveUser = (
 const findUserById = (
   data: userUniqueSearchInput
 ) => {
-  const { email } = data
-  return User.findOne({ email })
+  const { userId } = data
+  return User.findOne({ userId })
 }
 
 const findAllUser = (
