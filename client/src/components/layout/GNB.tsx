@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { Avatar, Button, Divider, Dropdown, Layout, MenuProps, theme } from 'antd'
 import { AuthContext } from '../../contexts/AuthContext'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { UserOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
@@ -11,6 +11,7 @@ const { Header } = Layout
 const GNB: React.FC = () => {
 
   const navigate = useNavigate()
+  const location = useLocation()
   
   const {
     token: { colorBgContainer },
@@ -26,6 +27,12 @@ const GNB: React.FC = () => {
     console.log('header useEffect')
     authentication()
   }, [])
+
+  useEffect(() => {
+    if (userNo && (location.pathname === '/login' || location.pathname === '/signup')) {
+      navigate('/');
+    }
+  }, [userNo])
 
   const onSignOut = () => {
     navigate('/login')

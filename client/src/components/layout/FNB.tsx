@@ -5,7 +5,7 @@ const { Footer } = Layout
 
 const FNB: React.FC = () => {
   return (
-    <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
+    <Footer style={{ textAlign: 'center' }}>antd 푸터</Footer>
   )
 }
 

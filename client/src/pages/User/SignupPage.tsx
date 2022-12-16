@@ -1,10 +1,11 @@
-import React, { useRef } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, Input, Space, Form, Button, InputRef } from 'antd'
-import { ErrorMessage, Formik, useFormik } from 'formik'
+import { Card, Input, Space, Form, Button, Typography } from 'antd'
+import { ErrorMessage, Formik } from 'formik'
 import * as Yup from 'yup'
 import { api } from '../../utils/axiosInstance'
+
+const { Text } = Typography
 
 interface FormValue {
   userId: string
@@ -50,21 +51,23 @@ const SignupPage: React.FC = () => {
             }}
             validationSchema={validationSchema}
             onSubmit={onSubmitHandler}
-            style={{ marginTop: '5vh' }}
-          >
+            >
             {({ handleChange, handleSubmit, values }) => (
               <Form 
                 autoComplete="off" 
                 onFinish={handleSubmit}
                 labelCol={{ span: 8 }}
                 wrapperCol={{ span: 8 }}
+                style={{ marginTop: '5vh' }}
               >
                 <Form.Item label="아이디">
                   <Input
                     name="userId"
                     value={values.userId}
                     onChange={handleChange} />
-                  <ErrorMessage name="userId" />
+                  <Text type="danger">
+                    <ErrorMessage name="userId" />
+                  </Text>
                 </Form.Item>
 
                 <Form.Item label="비밀번호">
@@ -72,7 +75,9 @@ const SignupPage: React.FC = () => {
                     name="userPassword"
                     value={values.userPassword}
                     onChange={handleChange} />
-                  <ErrorMessage name="userPassword" />
+                  <Text type="danger">
+                    <ErrorMessage name="userPassword" />
+                  </Text>
                 </Form.Item>
 
                 <Form.Item label="비밀번호 확인">
@@ -80,7 +85,9 @@ const SignupPage: React.FC = () => {
                     name="userPasswordConfirm"
                     value={values.userPasswordConfirm}
                     onChange={handleChange} />
-                  <ErrorMessage name="userPasswordConfirm" />
+                  <Text type="danger">
+                    <ErrorMessage name="userPasswordConfirm" />
+                  </Text>
                 </Form.Item>
                 <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
                   <Button type="primary" htmlType="submit" block >
