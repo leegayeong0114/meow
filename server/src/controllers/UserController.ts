@@ -57,7 +57,7 @@ const signUp = async (
       { expiresIn: '1d' },
       (err, token) => {
         if(err) throw err
-        res.json({
+        res.status(200).json({
           success: true,
           token 
         })
@@ -106,7 +106,7 @@ const logIn = async (
       { expiresIn: '1d' },
       (err, token) => {
         if(err) throw err
-        res.json({ 
+        res.status(200).json({ 
           success: true,
           token 
         })
@@ -152,7 +152,7 @@ const selectAllUser = async (
 ) => {
   try {
     const userList: IUser[] = await UserService.findAllUser()
-    return res.send({ userList })
+    return res.status(200).json({ userList })
   } catch(err) {
     next(err)
   }
@@ -166,7 +166,7 @@ const selectOneUser = async (
   try {
     const { userId } = req.body
     const user: IUser = await UserService.findUserById({ userId })
-    return res.json({ user })
+    return res.status(200).json({ user })
   } catch(err) {
     next(err)
   }

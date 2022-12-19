@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import {
+  AppstoreOutlined,
   DesktopOutlined,
   FileOutlined,
   PieChartOutlined,
@@ -8,8 +9,10 @@ import {
 } from '@ant-design/icons'
 import type { MenuProps } from 'antd'
 import { Layout, Menu } from 'antd'
+import { Link, useNavigate } from 'react-router-dom'
 
 const { Sider } = Layout
+
 
 type MenuItem = Required<MenuProps>['items'][number]
 function getItem(
@@ -19,19 +22,17 @@ function getItem(
   children?: MenuItem[],
 ): MenuItem {
   return {
+    label,
     key,
     icon,
     children,
-    label,
   } as MenuItem
 }
 
 const items: MenuItem[] = [
-  getItem('Option 1', '1', <PieChartOutlined />),
+  getItem('게시글', '/', <AppstoreOutlined  />),
   // getItem('Option 2', '2', <DesktopOutlined />),
-  getItem('User', 'sub1', <UserOutlined />, [
-    getItem('로그인', '3'),
-  ]),
+  getItem('내정보', '/mypage', <UserOutlined/>),
   // getItem('Team', 'sub2', <TeamOutlined />, [
   //   getItem('Team 1', '6'), 
   //   getItem('Team 2', '8')
@@ -42,6 +43,11 @@ const items: MenuItem[] = [
 const SNB: React.FC = () => {
 
   const [collapsed, setCollapsed] = useState(true)
+  const navigate = useNavigate()
+
+  const onClick: MenuProps['onClick'] = (e) => {
+    navigate(e.key)
+  }
 
   return (
     <Sider 
@@ -51,7 +57,7 @@ const SNB: React.FC = () => {
       style={{}}
     >
       <div style={{ height: 32, margin: 16, background: 'rgba(255, 255, 255, 0.2)' }}></div>
-      <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
+      <Menu onClick={onClick} theme="dark" defaultSelectedKeys={['1']} mode="inline" items={items} />
     </Sider>
   )
 }

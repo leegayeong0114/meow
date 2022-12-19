@@ -1,35 +1,33 @@
-import mongoose from 'mongoose'
+import mongoose, { model } from 'mongoose'
 import { IUser } from '../interfaces/IUser'
-import autoIncrement from 'mongoose-auto-increment'
 
-const UserSchema = new mongoose.Schema({
+const UserSchema = new mongoose.Schema<IUser>({
   userNo: {
     type: Number,
   },
   userId: {
     type: String,
     unique: true,
+    required: true,
   },
   userPassword: {
     type: String,
+    required: true,
   },
   userProfileImage: {
     type: String,
-    default: 'defalut'
+    default: 'defalut',
+    required: true,
   },
   userSignupDate: {
     type: Date,
     default: Date.now,
+    required: true,
   },
-}, {
+},{
   collection: 'USER'
 })
 
-// UserSchema.plugin(autoIncrement.plugin, {
-//     model: 'User',
-//     field: 'userNo',
-//     startAt: 1, //시작
-//     increment: 1 // 증가 
-// })
-
-export default mongoose.model<IUser & mongoose.Document>('User', UserSchema)
+// export default mongoose.model<IUser & mongoose.Document>('User', UserSchema)
+// export default mongoose.model<IUser>('User', UserSchema)
+export default model<IUser>('User', UserSchema)

@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react'
-import { Avatar, Button, Divider, Dropdown, Layout, MenuProps, theme } from 'antd'
+import React, { useContext, useEffect, useState } from 'react'
+import { Divider, Drawer, Layout, List, theme } from 'antd'
 import { AuthContext } from '../../contexts/AuthContext'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { UserOutlined } from '@ant-design/icons'
+import { MenuUnfoldOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 
 
@@ -24,15 +24,15 @@ const GNB: React.FC = () => {
   } = useContext(AuthContext)
 
   useEffect(() => {
-    console.log('header useEffect')
+    console.log('여기는 header useEffect')
     authentication()
   }, [])
-
+  
   useEffect(() => {
-    if (userNo && (location.pathname === '/login' || location.pathname === '/signup')) {
-      navigate('/');
+    if (userId && (location.pathname === '/login' || location.pathname === '/signup')) {
+      navigate('/')
     }
-  }, [userNo])
+  }, [userId])
 
   const onSignOut = () => {
     navigate('/login')
@@ -40,33 +40,52 @@ const GNB: React.FC = () => {
     localStorage.removeItem('accessToken')
   }
 
-  const items: MenuProps['items'] = [
-    {
-      key: '1',
-      label: (
-        <Link to='/mypage'>내정보</Link>
-      ),
-    },
-    {
-      key: '2',
-      label: (
-        <span onClick={() => {onSignOut()}}>로그아웃</span>
-      ),
-    },
-  ]
+  const [open, setOpen] = useState(false)
+
+  const showDrawer = () => {
+    setOpen(true)
+  }
+
+  const closeDrawer = () => {
+    setOpen(false)
+  }
+
+  const goPage = (e: React.MouseEvent, url: string) => {
+    e.preventDefault()
+    setOpen(false)
+    navigate(url)
+  }
 
   return (
     <Header style={{ padding: 0, background: colorBgContainer }}>
-      <Divider orientation="right" plain>
-      {
-        userNo ? 
-          <Dropdown menu={{ items }} placement="bottom">
-            <Avatar size={'large'} icon={<UserOutlined />} style={{ backgroundColor: '#87d068' }} />
-          </Dropdown>
-          :
-          <Button onClick={() => navigate('/login')}>로그인</Button>
-      }
-    </Divider>
+      <Divider orientation="left" plain>
+        <MenuUnfoldOutlined style={{ fontSize: '30px', color: '#08c' }} onClick={showDrawer} />
+        <Drawer 
+          title="MENU" 
+          placement="left" 
+          footer={userNo ? <div onClick={onSignOut}>로그아웃</div> : ''}
+          onClose={closeDrawer} 
+          open={open}>
+          <List
+            // header={<div>Header</div>}
+            // footer={<div>Footer</div>}
+            bordered
+          >
+            <List.Item>
+              <Link onClick={(e) => goPage(e, '/')} to={'/'}>메인페이지</Link>
+            </List.Item>
+            <List.Item>
+              <Link onClick={(e) => goPage(e, `/${userId}`)} to={`/${userId}`}>마이페이지</Link>
+            </List.Item>
+            <List.Item>
+              <Link onClick={(e) => goPage(e, '/login')} to={'/login'}>로그인</Link>
+            </List.Item>
+            <List.Item>
+              <Link onClick={(e) => goPage(e, '/signup')} to={'/signup'}>회원가입</Link>
+            </List.Item>
+          </List>
+        </Drawer>
+      </Divider>
     </Header>
   )
 }

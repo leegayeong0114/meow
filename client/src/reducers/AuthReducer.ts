@@ -16,20 +16,23 @@ type AuthAction = {
 
 export const authReducer = (state: AuthState, action: AuthAction) => {
   const { payload } = action
+  console.log('authReducer : ')
+  console.log(state)
+  console.log(payload)
   switch (action.type) {
     case TOGGLE_AUTH:
       return {
-          ...state,
-          userNo: payload.userNo,
-          userId: payload.userId,
-          userProfileImage: payload.userProfileImage
+        ...state,
+        userNo: payload.userNo,
+        userId: payload.userId,
+        userProfileImage: payload.userProfileImage
       }
     case SIGN_OUT:
       return {
-          ...state,
-          userNo: 0,
-          userId: '',
-          userProfileImage: ''
+        ...state,
+        userNo: 0,
+        userId: '',
+        userProfileImage: ''
       }
     default:
       return state

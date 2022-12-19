@@ -11,14 +11,14 @@ interface AuthContextDefault {
   signOut: () => void
 }
 
-const authDefault = {
+const authInit = {
   userNo: 0,
   userId: '',
   userProfileImage: ''
 }
 
 export const AuthContext = createContext<AuthContextDefault>({
-  authInfo: authDefault,
+  authInfo: authInit,
   authentication: () => { },
   signOut: () => { }
 })
@@ -31,10 +31,10 @@ type AxiosReponse = {
 
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
-  const [authInfo, dispatch] = useReducer(authReducer, authDefault)
+  const [authInfo, dispatch] = useReducer(authReducer, authInit)
 
   const authentication = async () => {
-    const { data } = await api().get<AxiosReponse>(`/api/users/auth`)
+    const { data } = await api().post<AxiosReponse>(`/api/users/auth`)
     return dispatch({
       type: TOGGLE_AUTH,
       payload: data
@@ -44,7 +44,7 @@ const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = () => {
     return dispatch({
       type: SIGN_OUT,
-      payload: authDefault
+      payload: authInit
     })
   }
 

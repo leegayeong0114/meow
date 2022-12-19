@@ -1,4 +1,4 @@
-export interface IUser{
+export interface IUser {
   userNo: number
   userId: string
   userPassword: string

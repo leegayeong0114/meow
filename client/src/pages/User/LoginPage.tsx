@@ -67,7 +67,7 @@ const LoginPage: FC = () => {
             >
               <Input.Password/>
             </Form.Item>
-            <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+            <Form.Item>
               <Button type="primary" htmlType="submit" block>
                 로그인
               </Button>
