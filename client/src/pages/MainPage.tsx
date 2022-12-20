@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons'
-import { Avatar, List, message } from 'antd'
+import { Avatar, FloatButton, List, message } from 'antd'
 import React, { useEffect } from 'react'
 import ImageSlider from '../components/post/ImageSlider'
 
@@ -26,6 +26,7 @@ const MainPage: React.FC = () => {
   return (
     <div style={{ padding: 24, textAlign: 'center', background: 'white', minHeight: '80vh' }}>
       멘
+      <img src={`${process.env.REACT_APP_S3_URL}upload/cldrCm37tp_default.png`} alt=""/>
       <div style={{ margin: '3% 10% 3%' }}>
         <List
           itemLayout="vertical"
@@ -49,6 +50,7 @@ const MainPage: React.FC = () => {
           )}
           />
       </div>
+      <FloatButton.BackTop />
     </div>
   )
 }

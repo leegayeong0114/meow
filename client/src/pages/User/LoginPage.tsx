@@ -14,7 +14,7 @@ interface FormValue {
 const LoginPage: FC = () => {
 
   const navigate = useNavigate() // v6 이후 useHistory => useNavigate
-  const { authentication } = useContext(AuthContext);
+  const { authentication } = useContext(AuthContext)
 
   const onSubmitHandler = async (data: FormValue) => {
     console.log('[login] request data : ', data)
@@ -48,7 +48,6 @@ const LoginPage: FC = () => {
               userPassword: ''
             }}
             onFinish={onSubmitHandler}
-            // onFinishFailed={onFinishFailed}
             autoComplete="off"
             style={{ marginTop: '5vh' }}
           >
@@ -67,7 +66,7 @@ const LoginPage: FC = () => {
             >
               <Input.Password/>
             </Form.Item>
-            <Form.Item>
+            <Form.Item label="클릭클릭!!">
               <Button type="primary" htmlType="submit" block>
                 로그인
               </Button>

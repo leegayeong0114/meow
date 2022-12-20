@@ -4,6 +4,7 @@ import dotenv from 'dotenv'
 import routes from './routes'
 
 dotenv.config()
+
 const app: Express = express()
 const port = process.env.PORT || 5000
 
@@ -27,4 +28,3 @@ app.listen(port, () => {
       console.log(`${err}`)
     })
 })
-

@@ -13,7 +13,7 @@ const savePost = (
 
 const findAllPost = (
 ) => {
-  return Post.find().populate('writer')
+  return Post.find().populate('author')
 }
 
 export default {

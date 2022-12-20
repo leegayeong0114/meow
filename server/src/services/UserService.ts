@@ -16,12 +16,12 @@ const findUserById = (
   data: userUniqueSearchInput
 ) => {
   const { userId } = data
-  return User.findOne({ userId })
+  return User.findOne({ userId }).populate('posts')
 }
 
 const findAllUser = (
 ) => {
-  return User.find()
+  return User.find().populate('posts')
 }
 
 export default {

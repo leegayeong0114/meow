@@ -24,10 +24,12 @@ const UserSchema = new mongoose.Schema<IUser>({
     default: Date.now,
     required: true,
   },
+  posts: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Post'
+  }]
 },{
   collection: 'USER'
 })
 
-// export default mongoose.model<IUser & mongoose.Document>('User', UserSchema)
-// export default mongoose.model<IUser>('User', UserSchema)
-export default model<IUser>('User', UserSchema)
+export default mongoose.model<IUser & mongoose.Document>('User', UserSchema)

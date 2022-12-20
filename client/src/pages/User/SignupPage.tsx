@@ -89,7 +89,7 @@ const SignupPage: React.FC = () => {
                     <ErrorMessage name="userPasswordConfirm" />
                   </Text>
                 </Form.Item>
-                <Form.Item wrapperCol={{ offset: 8, span: 8 }}>
+                <Form.Item label="클릭클릭!!">
                   <Button type="primary" htmlType="submit" block >
                     회원가입
                   </Button>

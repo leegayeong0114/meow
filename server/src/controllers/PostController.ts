@@ -7,7 +7,7 @@ import {
   IPost, 
   IPostInputDto, 
 } from '../interfaces/IPost'
-import PostService from '../service/PostService'
+import PostService from '../services/PostService'
 
 const uploadPost = async (
   req: Request, 

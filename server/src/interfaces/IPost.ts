@@ -1,4 +1,3 @@
-import mongoose from 'mongoose'
 import { IUser } from './IUser'
 
 export interface IPost {
@@ -8,7 +7,7 @@ export interface IPost {
   fileId: string
   tag?: string
   createdDt?: Date
-  writer: IUser
+  author: IUser
 }
 
 export interface IPostInputDto {

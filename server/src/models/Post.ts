@@ -26,11 +26,12 @@ const PostSchema = new mongoose.Schema<IPost>({
     default: Date.now,
     required: true,
   },
-  writer: {
-    type: mongoose.Types.ObjectId,
+  author: { 
+    type: mongoose.Schema.Types.ObjectId, 
     ref: 'User'
   }
 },{
   collection: 'POST'
 })
-export default model<IPost>('Post', PostSchema)
+
+export default mongoose.model<IPost & mongoose.Document>('Post', PostSchema)

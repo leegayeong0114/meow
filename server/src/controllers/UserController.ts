@@ -10,16 +10,12 @@ import {
   IUserInputDTO, 
   userUniqueSearchInput
 } from '../interfaces/IUser'
-import { UserService } from '../service'
+import { UserService } from '../services'
 import { 
   JWT_SECRET_CODE,
   JWT_SALT
 } from '../config/jwt'
-import { 
-  USER_ALREADY_EXISIST, 
-  USER_ID_NOTFOUND,
-  USER_PASSWORD_NOTMATCHED
-} from '../config/message'
+import message from '../config/message'
 
 const signUp = async (
   req: Request, 
@@ -34,7 +30,7 @@ const signUp = async (
     if(foundUser) {
       return res.json({
         success: false,
-        errorMsg: USER_ALREADY_EXISIST
+        errorMsg: message.USER_ALREADY_EXISIST
       })
     } 
 
@@ -80,7 +76,7 @@ const logIn = async (
     if(!user){
       return res.json({
         success: false,
-        errorMsg: USER_ID_NOTFOUND
+        errorMsg:message.USER_ID_NOTFOUND
       })
     }
 
@@ -88,7 +84,7 @@ const logIn = async (
     if(!isMatch){
       return res.json({
         success: false,
-        errorMsg: USER_PASSWORD_NOTMATCHED
+        errorMsg: message.USER_PASSWORD_NOTMATCHED
       })
     }
 
