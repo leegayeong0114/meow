@@ -8,16 +8,16 @@ const MyPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<IUser | null>(null)
 
   const {
-    authInfo: { userId }
+    authInfo: { authUser }
   } = useContext(AuthContext)
 
   useEffect(() => {
     getUserInfo()
-  }, [userId])
+  }, [authUser.userId])
 
   const getUserInfo = async () => {
     const data = {
-      userId: userId
+      userId: authUser.userId
     }
     const res = await api().post('/api/users/select-one-user', data)
     setUserInfo({...res.data.user})

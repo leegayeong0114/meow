@@ -3,7 +3,7 @@ import { authReducer, AuthState } from '../reducers/AuthReducer'
 import { AuthActionType } from '../reducers/type'
 import { api } from '../utils/axiosInstance'
 
-const { TOGGLE_AUTH, SIGN_OUT } = AuthActionType
+const { CHECK_AUTH, SIGN_OUT } = AuthActionType
 
 interface AuthContextDefault {
   authInfo: AuthState
@@ -11,10 +11,13 @@ interface AuthContextDefault {
   signOut: () => void
 }
 
-const authInit = {
-  userNo: 0,
-  userId: '',
-  userProfileImage: ''
+export const authInit = {
+  isAuth: false,
+  authUser: {
+    uid: '',
+    userId: '',
+    userProfileImage: ''
+  }
 }
 
 export const AuthContext = createContext<AuthContextDefault>({
@@ -24,19 +27,23 @@ export const AuthContext = createContext<AuthContextDefault>({
 })
 
 type AxiosReponse = {
-  userNo: number
-  userId: string
-  userProfileImage: string
+  isAuth: boolean
+  authUser: {
+    uid: string
+    userId: string
+    userProfileImage: string
+  }
 }
 
 const AuthContextProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [authInfo, dispatch] = useReducer(authReducer, authInit)
-
   const authentication = async () => {
-    const { data } = await api().post<AxiosReponse>(`/api/users/auth`)
+
+    const { data } = await api().post<AxiosReponse>(`/api/auth`)
+
     return dispatch({
-      type: TOGGLE_AUTH,
+      type: CHECK_AUTH,
       payload: data
     })
   }

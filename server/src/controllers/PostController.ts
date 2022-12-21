@@ -5,9 +5,12 @@ import {
 } from 'express'
 import { 
   IPost, 
-  IPostInputDto, 
+  IPostSaveDto, 
 } from '../interfaces/IPost'
+import { UserService } from '../services'
+import FileService from '../services/FileService'
 import PostService from '../services/PostService'
+import { makeRandomId } from '../utils/RandomUtil'
 
 const uploadPost = async (
   req: Request, 
@@ -15,13 +18,19 @@ const uploadPost = async (
   next: NextFunction
 ) => {
   try {
-    // PostId, content, fileId, tag?
-    const { userId, content, tag }: IPostInputDto = req.body
-    const uploadPost = await PostService.savePost({ 
-      userId: userId, 
+
+    const { content, tag, author }: IPostSaveDto = req.body
+    const randomFileId = makeRandomId(8, false)
+
+    const uploadPost = await PostService.savePost({  
       content: content,
       tag: tag,
+      author: author,
+      fileId: randomFileId,
+      fileData: req.file
     })
+
+    const data = await FileService.uploadFile(req.file, randomFileId)
 
     res.json({ uploadPost })
 
@@ -36,7 +45,7 @@ const selectAllPost = async (
   next: NextFunction
 ) => {
   try {
-    const postList: IPost[] = await PostService.findAllPost()
+    const postList: IPost[] = await PostService.findAllPost().populate('files')
     return res.status(200).json({ postList })
   } catch(err) {
     next(err)

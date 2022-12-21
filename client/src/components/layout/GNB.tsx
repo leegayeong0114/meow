@@ -18,26 +18,26 @@ const GNB: React.FC = () => {
   } = theme.useToken()
 
   const {
-    authInfo: { userNo, userId, userProfileImage },
+    authInfo: { isAuth, authUser },
     authentication,
     signOut
   } = useContext(AuthContext)
 
   useEffect(() => {
-    console.log('여기는 header useEffect')
     authentication()
   }, [])
   
   useEffect(() => {
-    if (userId && (location.pathname === '/login' || location.pathname === '/signup')) {
+    if (!!isAuth && (location.pathname === '/login' || location.pathname === '/signup')) {
       navigate('/')
     }
-  }, [userId])
-
+  }, [authUser])
+  
   const onSignOut = () => {
-    navigate('/login')
-    signOut()
     localStorage.removeItem('accessToken')
+    authentication()
+    closeDrawer()
+    navigate('/')
   }
 
   const [open, setOpen] = useState(false)
@@ -63,7 +63,7 @@ const GNB: React.FC = () => {
         <Drawer 
           title="MENU" 
           placement="left" 
-          footer={userNo ? <div onClick={onSignOut}>로그아웃</div> : ''}
+          footer={!!isAuth ? <div onClick={onSignOut}>로그아웃</div> : ''}
           onClose={closeDrawer} 
           open={open}>
           <List
@@ -75,7 +75,7 @@ const GNB: React.FC = () => {
               <Link onClick={(e) => goPage(e, '/')} to={'/'}>메인페이지</Link>
             </List.Item>
             <List.Item>
-              <Link onClick={(e) => goPage(e, `/${userId}`)} to={`/${userId}`}>마이페이지</Link>
+              <Link onClick={(e) => goPage(e, `/${authUser?.userId}`)} to={`/${authUser?.userId}`}>마이페이지</Link>
             </List.Item>
             <List.Item>
               <Link onClick={(e) => goPage(e, '/login')} to={'/login'}>로그인</Link>

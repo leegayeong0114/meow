@@ -16,7 +16,9 @@ const { Content } = Layout
 const Router = () => {
 
   const {
-    authInfo: { userId },
+    authInfo: { 
+      isAuth,
+    },
   } = useContext(AuthContext)
 
   return (
@@ -31,7 +33,7 @@ const Router = () => {
               <Route path="/upload" element={<UploadTest />} />
               <Route path="/:userId" element={<MyPage />} />
               <Route path="/test" element={<Test />} />
-              <Route path="/" element={userId ? <MainPage /> : <LoginPage />} />
+              <Route path="/" element={!!isAuth ? <MainPage /> : <LoginPage />} />
             </Routes>
           </Content>
         <FNB />

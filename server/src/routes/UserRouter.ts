@@ -9,13 +9,12 @@ import {
   API_USERS_SELECT_ALL,
   API_USERS_SELECT_ONE,
 } from '../config/path'
-import { authMiddleware } from '../middleware/AuthMiddleware'
+import { auth } from '../middleware/auth'
 
 const router = Router()
 
 router.post(API_USERS_SIGNUP, UserController.signUp)
 router.post(API_USERS_LOGIN, UserController.logIn)
-router.post(API_USERS_AUTH, authMiddleware, UserController.auth)
 router.get(API_USERS_SELECT_ALL, UserController.selectAllUser)
 router.post(API_USERS_SELECT_ONE, UserController.selectOneUser)
 

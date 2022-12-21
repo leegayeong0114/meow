@@ -1,38 +1,41 @@
+import { authInit } from '../contexts/AuthContext'
 import { AuthActionType } from './type'
-const { TOGGLE_AUTH, SIGN_OUT } = AuthActionType
+const { 
+  CHECK_AUTH, 
+  SIGN_OUT 
+} = AuthActionType
 
-interface User {
-  userNo: number
-  userId: string
-  userProfileImage: string
+interface AuthInfo {
+  isAuth: boolean
+  authUser: {
+    uid: string
+    userId: string
+    userProfileImage: string
+  }
 }
 
-export type AuthState = User
+export type AuthState = AuthInfo
 
 type AuthAction = {
   type: AuthActionType
-  payload: User
+  payload: AuthInfo
 }
 
 export const authReducer = (state: AuthState, action: AuthAction) => {
+
   const { payload } = action
-  console.log('authReducer : ')
-  console.log(state)
-  console.log(payload)
+
   switch (action.type) {
-    case TOGGLE_AUTH:
+    case CHECK_AUTH:
       return {
         ...state,
-        userNo: payload.userNo,
-        userId: payload.userId,
-        userProfileImage: payload.userProfileImage
+        isAuth: payload.isAuth,
+        authUser: payload.authUser
       }
     case SIGN_OUT:
       return {
         ...state,
-        userNo: 0,
-        userId: '',
-        userProfileImage: ''
+        authInit
       }
     default:
       return state

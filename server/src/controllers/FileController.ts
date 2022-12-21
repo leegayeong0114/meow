@@ -4,6 +4,7 @@ import {
   Response 
 } from 'express'
 import FileService from '../services/FileService'
+import { httpStatus } from '../config/httpStatus'
 
 const uploadFile = async (
   req: Request, 
@@ -13,18 +14,20 @@ const uploadFile = async (
 
   try {
     const fileData: Express.Multer.File = req.file
-    const data = await FileService.uploadFile(fileData)
+    const data = await FileService.uploadFile(fileData, 'fileCtrl')
 
-    res.status(200).send({
-      success: true,
-      data: data
-    })
+    res.status(httpStatus.OK)
+      .send({
+        success: true,
+        data: data
+      })
 
   } catch (error) {
     console.log(error)
-    res.status(500).send({
-      success: false
-    })
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .send({
+        success: false
+      })
   }
 }
 

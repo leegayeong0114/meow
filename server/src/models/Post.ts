@@ -2,11 +2,8 @@ import mongoose, { model } from 'mongoose'
 import { IPost } from '../interfaces/IPost'
 
 const PostSchema = new mongoose.Schema<IPost>({
-  postId: {
+  postNo: {
     type: Number,
-  },
-  userId: {
-    type: String,
   },
   content: {
     type: String,
@@ -21,17 +18,17 @@ const PostSchema = new mongoose.Schema<IPost>({
     type: String,
     default: ''
   },
-  createdDt: {
-    type: Date,
-    default: Date.now,
-    required: true,
-  },
   author: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'User'
-  }
+  },
+  files: [{
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'File'
+  }]
 },{
-  collection: 'POST'
+  collection: 'POST',
+  timestamps: true,
 })
 
 export default mongoose.model<IPost & mongoose.Document>('Post', PostSchema)

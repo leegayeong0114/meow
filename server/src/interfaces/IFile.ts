@@ -7,5 +7,6 @@ export interface IFile {
 
 export interface IFileResponseDto {
   _id: mongoose.Schema.Types.ObjectId
+  fileId: string
   filePath: string
 }

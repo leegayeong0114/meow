@@ -8,7 +8,6 @@ import jwt from 'jsonwebtoken'
 import { 
   IUser, 
   IUserInputDTO, 
-  userUniqueSearchInput
 } from '../interfaces/IUser'
 import { UserService } from '../services'
 import { 
@@ -16,6 +15,7 @@ import {
   JWT_SALT
 } from '../config/jwt'
 import message from '../config/message'
+import { httpStatus } from '../config/httpStatus'
 
 const signUp = async (
   req: Request, 
@@ -28,7 +28,7 @@ const signUp = async (
     // 기존 사용자인지 확인
     const foundUser = await UserService.findUserById({ userId })
     if(foundUser) {
-      return res.json({
+      return res.send({
         success: false,
         errorMsg: message.USER_ALREADY_EXISIST
       })
@@ -42,18 +42,19 @@ const signUp = async (
 
     const payload = {
       user: {
+        uid: createdUser._id,
         userId: createdUser.userId,
+        userProfileImage: createdUser.userProfileImage,
       },
     }
 
-    // jwt.sign(payload, secretKey, option)
     jwt.sign(
       payload,
       JWT_SECRET_CODE,
       { expiresIn: '1d' },
       (err, token) => {
         if(err) throw err
-        res.status(200).json({
+        res.status(httpStatus.CREATED).json({
           success: true,
           token 
         })
@@ -90,6 +91,7 @@ const logIn = async (
 
     const payload = {
       user: {
+        uid: user._id,
         userNo: user.userNo,
         userId: user.userId,
         userProfileImage: user.userProfileImage,
@@ -102,40 +104,12 @@ const logIn = async (
       { expiresIn: '1d' },
       (err, token) => {
         if(err) throw err
-        res.status(200).json({ 
+        res.status(httpStatus.OK).json({ 
           success: true,
           token 
         })
       }
     )
-  } catch(err) {
-    next(err)
-  }
-}
-
-const auth = async (
-  req: Request, 
-  res: Response, 
-  next: NextFunction
-) => {
-  try {
-
-    const loginInfo = req.body.loginInfo
-
-    if(loginInfo) {
-      const { userId }: userUniqueSearchInput = loginInfo.user
-      const authUser = await UserService.findUserById({ userId })
-      console.log(authUser)
-      return res.status(200).json(authUser)
-    }
-
-    const defaultUser = {
-      userNo: '',
-      userId: '',
-      userPassword: '',
-      userProfileImage: 'defalut',
-    }
-    return res.json(defaultUser)
   } catch(err) {
     next(err)
   }
@@ -148,7 +122,7 @@ const selectAllUser = async (
 ) => {
   try {
     const userList: IUser[] = await UserService.findAllUser()
-    return res.status(200).json({ userList })
+    return res.status(httpStatus.OK).json({ userList })
   } catch(err) {
     next(err)
   }
@@ -171,7 +145,6 @@ const selectOneUser = async (
 export default {
   signUp,
   logIn,
-  auth,
   selectAllUser,
   selectOneUser,
 }

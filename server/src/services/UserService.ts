@@ -16,7 +16,7 @@ const findUserById = (
   data: userUniqueSearchInput
 ) => {
   const { userId } = data
-  return User.findOne({ userId }).populate('posts')
+  return User.findOne({ userId })
 }
 
 const findAllUser = (

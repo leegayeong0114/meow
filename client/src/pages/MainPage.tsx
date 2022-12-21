@@ -1,48 +1,51 @@
 import { UserOutlined } from '@ant-design/icons'
 import { Avatar, FloatButton, List, message } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import ImageSlider from '../components/post/ImageSlider'
-
-const data = [
-  {
-    title: 'Ant Design Title 1',
-  },
-  {
-    title: 'Ant Design Title 2',
-  },
-  {
-    title: 'Ant Design Title 3',
-  },
-  {
-    title: 'Ant Design Title 4',
-  },
-]
+import { IPost } from '../types'
+import { api } from '../utils/axiosInstance'
 
 const MainPage: React.FC = () => {
+
   useEffect(() => {
     message.success(`hi main`)
   }, [])
 
+  const [postList, setPostList] = useState<IPost[]>([])
+
+  useEffect(() => {
+    getAllUser()
+  }, [])
+
+  const getAllUser = async () => {
+    try {
+      const res = await api().post('/api/post/select-all-post')
+      console.log(res.data)
+      setPostList([...res.data.postList])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div style={{ padding: 24, textAlign: 'center', background: 'white', minHeight: '80vh' }}>
       멘
-      <img src={`${process.env.REACT_APP_S3_URL}upload/cldrCm37tp_default.png`} alt=""/>
       <div style={{ margin: '3% 10% 3%' }}>
         <List
           itemLayout="vertical"
-          dataSource={data}
+          dataSource={postList}
           renderItem={(item) => (
             <>
               <List.Item>
                 <List.Item.Meta
-                  avatar={<Avatar size={40} icon={<UserOutlined />} />}
-                  title={item.title}
+                  avatar={<Avatar size={40} src={`${process.env.REACT_APP_S3_URL}upload/user/${item.author.userId}/${item.author.userProfileImage}`} icon={<UserOutlined />} />}
+                  title={item.author.userId}
                 />
               </List.Item>
               <ImageSlider name='asd'/>
               <List.Item>
                 <List.Item.Meta
-                  description="여기는 내용이 올 자리"
+                  description={item.content}
                   // children={}
                 />
               </List.Item>

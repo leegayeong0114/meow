@@ -1,4 +1,4 @@
 export enum AuthActionType {
-  TOGGLE_AUTH = 'TOGGLE_AUTH',
+  CHECK_AUTH = 'CHECK_AUTH',
   SIGN_OUT = 'SIGN_OUT',
 }

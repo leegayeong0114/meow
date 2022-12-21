@@ -1,7 +1,7 @@
 import { Request, Response, Router } from 'express'
 import multer from 'multer'
 import FileController from '../controllers/FileController'
-import { multerConfig } from '../utils/S3UploadUtil'
+import { multerConfig } from '../middleware/upload'
 
 const router = Router()
 

@@ -1,3 +1,6 @@
+// AUTH
+export const API_AUTH = '/api/auth'
+
 // USER
 export const API_USERS_SIGNUP = '/api/users/signup'
 export const API_USERS_LOGIN = '/api/users/login'

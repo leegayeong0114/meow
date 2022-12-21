@@ -3,8 +3,8 @@ const getDate = (): string => {
   return `${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}`
 }
 
-export const makeRandomId = (length: number): string => {
-  let result = getDate()
+export const makeRandomId = (length: number, isIncludeDate: boolean): string => {
+  let result = !!isIncludeDate ? getDate() : ''
   let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
   const charactersLength = characters.length
   for (let i = 0; i < length; i++) {

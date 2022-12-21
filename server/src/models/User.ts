@@ -19,17 +19,13 @@ const UserSchema = new mongoose.Schema<IUser>({
     default: 'defalut',
     required: true,
   },
-  userSignupDate: {
-    type: Date,
-    default: Date.now,
-    required: true,
-  },
   posts: [{ 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Post'
   }]
 },{
-  collection: 'USER'
+  collection: 'USER',
+  timestamps: true,
 })
 
 export default mongoose.model<IUser & mongoose.Document>('User', UserSchema)
